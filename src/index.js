@@ -16,7 +16,7 @@ import {
 
 // 2
 const httpLink = createHttpLink({
-  uri: 'https://irvingcm123-irvingcm123.cloud.okteto.net/graphql/'
+  uri: 'https://centenitoo-centenitoo.cloud.okteto.net/graphql/'
 });
 
 const authLink = setContext((_, { headers }) => {

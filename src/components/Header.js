@@ -15,7 +15,7 @@ const Header = () => {
       <div className="encabezado">
         <div className="recuadroLogo">
           <h1>
-            <b className="logoText">{t("Music List!")}</b>
+            <b className="logoText">{t("Music List")}</b>
           </h1>
           <img className="logoImg" src="./img/Icono.png" alt="Textp" />
         </div>

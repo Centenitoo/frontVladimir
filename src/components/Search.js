@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
+import { useTranslation } from "react-i18next";
+
 
 const GET_DATA_ENTRIES_BY_USER = gql`
   query GetDataEntriesByUser($user: String!) {
@@ -25,9 +27,36 @@ const GET_DATA_ENTRIES_BY_MODEL = gql`
   }
 `;
 
+const GET_DATA_ENTRIES_BY_PROMPT = gql`
+  query GetDataEntriesByPrompt($prompt: String!) {
+    dataEntriesByPrompt(prompt: $prompt) {
+      id
+      user
+      model
+      prompt
+      result
+    }
+  }
+`;
+
+const GET_DATA_ENTRIES_BY_RESULT = gql`
+  query GetDataEntriesByResult($result: String!) {
+    dataEntriesByResult(result: $result) {
+      id
+      user
+      model
+      prompt
+      result
+    }
+  }
+`;
+
 const DataEntriesSearch = () => {
+  const { t } = useTranslation();
   const [user, setUser] = useState("");
   const [model, setModel] = useState("");
+  const [prompt, setPrompt] = useState("");
+  const [result, setResult] = useState("");
 
   const { loading: loadingUser, data: userData } = useQuery(
     GET_DATA_ENTRIES_BY_USER,
@@ -43,84 +72,138 @@ const DataEntriesSearch = () => {
     }
   );
 
+  const { loading: loadingPrompt, data: promptData } = useQuery(
+    GET_DATA_ENTRIES_BY_PROMPT,
+    {
+      variables: { prompt },
+    }
+  );
+
+  const { loading: loadingResult, data: resultData } = useQuery(
+    GET_DATA_ENTRIES_BY_RESULT,
+    {
+      variables: { result },
+    },
+  );
+
   const handleUserSearch = (e) => {
     e.preventDefault();
-    // Aquí puedes realizar acciones adicionales antes de la búsqueda por usuario
-    // Por ejemplo, puedes realizar una validación de entrada o limpiar los resultados previos
-    // Luego, realiza la búsqueda por usuario
+    // Realiza la búsqueda por usuario
   };
 
   const handleModelSearch = (e) => {
     e.preventDefault();
-    // Aquí puedes realizar acciones adicionales antes de la búsqueda por modelo
-    // Por ejemplo, puedes realizar una validación de entrada o limpiar los resultados previos
-    // Luego, realiza la búsqueda por modelo
+    // Realiza la búsqueda por modelo
+  };
+
+  const handlePromptSearch = (e) => {
+    e.preventDefault();
+    // Realiza la búsqueda por prompt
+  };
+
+  const handleResultSearch = (e) => {
+    e.preventDefault();
+    // Realiza la búsqueda por result
   };
 
   return (
     <div style={{ marginTop: "9rem" }}>
-      <h3 style={{ color: "white" }}>Search Data Entries</h3>
+      <h3 style={{ color: "white" }}>{t("Search Data Entries")}</h3>
 
       <form onSubmit={handleUserSearch}>
-        <label style={{ color: "white" }}>User:</label>
+        <label style={{ color: "white" }}>{t("User")}:</label>
         <input
           type="text"
           value={user}
           onChange={(e) => setUser(e.target.value)}
         />
         <button style={{ color: "white" }} type="submit">
-          Search by User
+          {t("Search by User")}
         </button>
       </form>
 
       <form onSubmit={handleModelSearch}>
-        <label style={{ color: "white" }}>Model:</label>
+        <label style={{ color: "white" }}>{t("Model")}:</label>
         <select value={model} onChange={(e) => setModel(e.target.value)}>
-          <option style={{ color: "black" }} value="">
-            All
-          </option>
-          <option style={{ color: "black" }} value="Traductor">
-            Traductor
-          </option>
-          <option style={{ color: "black" }} value="text-davinci-003">
-            text-davinci-003
-          </option>
-          <option style={{ color: "black" }} value="List">
-            List
-          </option>
-          <option style={{ color: "black" }} value="Emoji">
-            Emoji
-          </option>
-          <option style={{ color: "black" }} value="Edits">
-            Edits
-          </option>
+          <option style={{ color: "black" }} value="">{t("All")}</option>
+          <option style={{ color: "black" }} value="Traductor">{t("Traductor")}</option>
+          <option style={{ color: "black" }} value="text-davinci-003">{t("text-davinci-003")}</option>
+          <option style={{ color: "black" }} value="List">{t("List")}</option>
+          <option style={{ color: "black" }} value="Emoji">{t("Emoji")}</option>
+          <option style={{ color: "black" }} value="Edits">{t("Edits")}</option>
         </select>
         <button style={{ color: "white" }} type="submit">
-          Search by Model
+          {t("Search by Model")}
         </button>
       </form>
 
-      <h4 style={{ color: "white" }}>Results:</h4>
+      <form onSubmit={handlePromptSearch}>
+        <label style={{ color: "white" }}>{t("Prompt")}:</label>
+        <input
+          type="text"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+        />
+        <button style={{ color: "white" }} type="submit">
+          {t("Search by Prompt")}
+        </button>
+      </form>
 
-      {loadingUser && <p style={{ color: "white" }}>Loading user data...</p>}
+      <form onSubmit={handleResultSearch}>
+        <label style={{ color: "white" }}>{t("Result")}:</label>
+        <input
+          type="text"
+          value={result}
+          onChange={(e) => setResult(e.target.value)}
+        />
+        <button style={{ color: "white" }} type="submit">
+          {t("Search by Result")}
+        </button>
+      </form>
+
+      <h4 style={{ color: "white" }}>{t("Results")}:</h4>
+
+      {loadingUser && <p style={{ color: "white" }}>{t("Loading user data...")}</p>}
       {userData &&
         userData.dataEntriesByUser.map((entry) => (
-          <div style={{marginTop: "0.5rem"}} key={entry.id}>
-            <p style={{ color: "white" }}>User: {entry.user}</p>
-            <p style={{ color: "white" }}>Model: {entry.model}</p>
-            <p style={{ color: "white" }}>Prompt: {entry.prompt}</p>
-            <p style={{ color: "white" }}>Result: {entry.result}</p>
-          </div >
+          <div style={{ marginTop: "0.5rem" }} key={entry.id}>
+            <p style={{ color: "white" }}>{t("User")}: {entry.user}</p>
+            <p style={{ color: "white" }}>{t("Model")}: {entry.model}</p>
+            <p style={{ color: "white" }}>{t("Prompt")}: {entry.prompt}</p>
+            <p style={{ color: "white" }}>{t("Result")}: {entry.result}</p>
+          </div>
         ))}
 
-      {loadingModel && <p style={{ color: "white" }}>Loading model data...</p>}
+      {loadingModel && <p style={{ color: "white" }}>{t("Loading model data...")}</p>}
       {modelData &&
         modelData.dataEntriesByModel.map((entry) => (
-          <div style={{marginTop: "0.5rem"}} key={entry.id}>
-            <p style={{ color: "white" }}>User: {entry.user}</p>
-            <p style={{ color: "white" }}>Model: {entry.model}</p>
-            <p style={{ color: "white" }}>Prompt: {entry.prompt}</p>
-            <p style={{ color: "white" }}>Result: {entry.result}</p>
+          <div style={{ marginTop: "0.5rem" }} key={entry.id}>
+            <p style={{ color: "white" }}>{t("User")}: {entry.user}</p>
+            <p style={{ color: "white" }}>{t("Model")}: {entry.model}</p>
+            <p style={{ color: "white" }}>{t("Prompt")}: {entry.prompt}</p>
+            <p style={{ color: "white" }}>{t("Result")}: {entry.result}</p>
+          </div>
+        ))}
+
+      {loadingPrompt && <p style={{ color: "white" }}>{t("Loading prompt data...")}</p>}
+      {promptData &&
+        promptData.dataEntriesByPrompt.map((entry) => (
+          <div style={{ marginTop: "0.5rem" }} key={entry.id}>
+            <p style={{ color: "white" }}>{t("User")}: {entry.user}</p>
+            <p style={{ color: "white" }}>{t("Model")}: {entry.model}</p>
+            <p style={{ color: "white" }}>{t("Prompt")}: {entry.prompt}</p>
+            <p style={{ color: "white" }}>{t("Result")}: {entry.result}</p>
+          </div>
+        ))}
+
+      {loadingResult && <p style={{ color: "white" }}>{t("Loading result data...")}</p>}
+      {resultData &&
+        resultData.dataEntriesByResult.map((entry) => (
+          <div style={{ marginTop: "0.5rem" }} key={entry.id}>
+            <p style={{ color: "white" }}>{t("User")}: {entry.user}</p>
+            <p style={{ color: "white" }}>{t("Model")}: {entry.model}</p>
+            <p style={{ color: "white" }}>{t("Prompt")}: {entry.prompt}</p>
+            <p style={{ color: "white" }}>{t("Result")}: {entry.result}</p>
           </div>
         ))}
     </div>

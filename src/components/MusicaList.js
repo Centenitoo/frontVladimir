@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 import '../styles/Mostrar.css';
+import { useTranslation } from "react-i18next";
 
 const FEED_QUERY = gql`
   query {
@@ -18,13 +19,14 @@ const FEED_QUERY = gql`
     }
   }
 `;
-
 const MusicaList = () => {
+  const { t } = useTranslation();
+
   const { data } = useQuery(FEED_QUERY);
 
   return (
     <div className="transparent-container">
-      <span style={{color: "white"}} className="Mostrar_Titulo">Canciones Almacenadas!</span>
+      <span style={{ color: "white" }} className="Mostrar_Titulo">{t("Canciones Almacenadas!")}</span>
 
       {data &&
         data.musicas.map((musica) => {
@@ -36,52 +38,52 @@ const MusicaList = () => {
                 </h2>
                 <div>
                   <div className="subtitle">
-                    Titulo_Cancion:
+                    {t("Titulo_Cancion")}:
                     <span className="texto"> {musica.titulo} </span>
                   </div>
 
                   <div className="subtitle">
-                    Duracion:
+                    {t("Duracion")}:
                     <span className="texto"> {musica.duracion} </span>
                   </div>
 
                   <div className="subtitle">
-                    Lanzamiento:
+                    {t("Lanzamiento")}:
                     <span className="texto"> {musica.lanzamiento} </span>
                   </div>
 
                   <div className="subtitle">
-                    Autor:
+                    {t("Autor")}:
                     <span className="texto"> {musica.autor} </span>
                   </div>
 
                   <div className="subtitle">
-                    Clasificacion:
+                    {t("Clasificacion")}:
                     <span className="texto"> {musica.clasificacion} </span>
                   </div>
 
                   <div className="subtitle">
-                    Pais:
+                    {t("Pais")}:
                     <span className="texto"> {musica.pais} </span>
                   </div>
 
                   <div className="subtitle">
-                    Genero:
+                    {t("Genero")}:
                     <span className="texto"> {musica.genero} </span>
                   </div>
 
                   <div className="subtitle">
-                    Album:
+                    {t("Album")}:
                     <span className="texto"> {musica.album} </span>
                   </div>
 
                   <div className="subtitle">
-                    Disponible en Spotify:
+                    {t("Disponible en Spotify")}:
                     <span className="texto"> {musica.disponibleSpotify} </span>
                   </div>
 
                   <div className="subtitle">
-                    Precio:
+                    {t("Precio")}:
                     <span className="texto"> {musica.precio} </span>
                   </div>
                 </div>
